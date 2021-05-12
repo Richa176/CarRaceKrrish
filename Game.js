@@ -29,15 +29,18 @@ class Game {
       form.display();
     }
 
-    car1 = createSprite(100,200);
+    car1 = createSprite(20,370);
     car1.addImage("car1",car1_img);
-    car2 = createSprite(300,200);
+    car1.scale=0.2;
+    car2 = createSprite(20,450);
     car2.addImage("car2",car2_img);
-    car3 = createSprite(500,200);
+    car2.scale=0.2;
+    car3 = createSprite(20,530);
     car3.addImage("car3",car3_img);
-    car4 = createSprite(700,200);
-    car4.addImage("car4",car4_img);
-    cars = [car1, car2, car3, car4];
+    car3.scale=0.2;
+    // car4 = createSprite(700,200);
+    // car4.addImage("car4",car4_img);
+    cars = [car1, car2, car3];
   }
 
   play(){
@@ -48,7 +51,7 @@ class Game {
     
     if(allPlayers !== undefined){
       background(rgb(198,135,103));
-      image(track, 0,-displayHeight*4,displayWidth, displayHeight*5);
+      image(track, displayWidth/8,0,displayWidth*5, displayHeight);
       
       //var display_position = 100;
       
@@ -56,39 +59,39 @@ class Game {
       var index = 0;
 
       //x and y position of the cars
-      var x = 250 ;
-      var y;
+      var x; //edited
+      var y=400; //edited
 
       for(var plr in allPlayers){
         //add 1 to the index for every loop
         index = index + 1 ;
 
-        //position the cars a little away from each other in x direction
-        x = x + 200;
-        //use data form the database to display the cars in y direction
-        y = displayHeight - allPlayers[plr].distance;
+        //position the cars a little away from each other in y direction
+        y = y +100; //edited
+        //use data form the database to display the cars in x direction
+        x =450 + allPlayers[plr].distance;//edited
+        console.log("x"+x);
         cars[index-1].x = x;
         cars[index-1].y = y;
+       // console.log(index, player.index)
 
+       
         if (index === player.index){
-          stroke(0);
+          stroke(10);
           fill("red");
-          ellipse(x,y,60,60);
+          ellipse(x-5,y-2,55,55);
           cars[index - 1].shapeColor = "red";
-          camera.position.x = displayWidth/2;
-          camera.position.y = cars[index-1].y;
+           camera.position.x = cars[index-1].x+500;//edited
+           camera.position.y = displayHeight/2;//edited
         }
        
         //textSize(15);
         //text(allPlayers[plr].name + ": " + allPlayers[plr].distance, 120,display_position)
-        textAlign(CENTER);
-        textSize(20);
-        text(allPlayers[plr].name, cars[index - 1].x, cars[index - 1].y + 75);
       }
 
     }
 
-    if(keyIsDown(UP_ARROW) && player.index !== null){
+    if(keyIsDown(RIGHT_ARROW) && player.index !== null){
       player.distance +=10
       player.update();
     }
@@ -103,12 +106,9 @@ class Game {
   }
 
   end(){
-    //console.log("Game Ended");
+    console.log("Game Ended");
     console.log(player.rank);
-    if(count===0){
-    alert("You Won "+player.name);
-    count++;
-    image(r1, displayWidth/2-100,  displayHeight/9, 200, 240);
-    }
+    gameState=0;
+    game.update(gameState);
   }
 }
